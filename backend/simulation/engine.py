@@ -49,6 +49,7 @@ class _ToolsetSimulation:
         self.queue: list[Lot] = []
         self.tool_busy: list[bool] = [False] * num_tools
         self.tool_busy_time: list[float] = [0.0] * num_tools  # accumulated busy seconds
+        self.tool_lots_processed: list[int] = [0] * num_tools  # NEW: track lots per tool
 
         # Metrics
         self.completed_lots: list[Lot] = []
@@ -59,6 +60,14 @@ class _ToolsetSimulation:
 
         # Event used to wake the dispatcher when something changes
         self._dispatch_trigger = env.event()
+
+    # ------------------------------------------------------------------
+    # Processes
+    # ------------------------------------------------------------------
+
+    def get_tool_load(self) -> list[float]:
+        """Calculate current load for each tool (for least-loaded strategy)."""
+        return [self.tool_busy_time[t] for t in range(self.num_tools)]
 
     # ------------------------------------------------------------------
     # Processes
@@ -107,6 +116,7 @@ class _ToolsetSimulation:
         lot.finish_time = self.env.now
         self.tool_busy[tool_idx] = False
         self.tool_busy_time[tool_idx] += pt
+        self.tool_lots_processed[tool_idx] += 1  # NEW: count lots
 
         self.completed_lots.append(lot)
         self.cumulative_moves += 1
@@ -133,11 +143,16 @@ class _ToolsetSimulation:
                     self.tool_busy,
                     self.qualification_matrix,
                     self.processing_times,
+                    self.get_tool_load(),
                 )
                 if decision is None:
                     break
                 lot_idx, tool_idx = decision
                 lot = self.queue.pop(lot_idx)
+                # Mark tool as busy IMMEDIATELY so the next loop iteration
+                # does not assign a second lot to the same tool.
+                # (env.process() is non-blocking: tool_process hasn't run yet)
+                self.tool_busy[tool_idx] = True
                 self.env.process(self.tool_process(tool_idx, lot))
 
     def snapshot_process(self):
