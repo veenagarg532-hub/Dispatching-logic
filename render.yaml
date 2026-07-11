@@ -1,0 +1,26 @@
+services:
+  # ── Backend (FastAPI) ──────────────────────────────────────────────────────
+  - type: web
+    name: dispatching-logic-api
+    runtime: python
+    rootDir: factory-simulation/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+
+  # ── Frontend (React/Vite, served as static site) ──────────────────────────
+  - type: web
+    name: dispatching-logic-ui
+    runtime: static
+    rootDir: factory-simulation/frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE
+        value: https://dispatching-logic-api.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
