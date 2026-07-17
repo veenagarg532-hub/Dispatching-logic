@@ -1,5 +1,5 @@
-fastapi==0.111.0
-uvicorn[standard]==0.29.0
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
 simpy==4.1.1
-pydantic==2.7.1
-pulp==2.7.0
+pydantic==2.10.4
+pulp==2.9.0
