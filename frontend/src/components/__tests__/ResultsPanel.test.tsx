@@ -6,7 +6,7 @@
  * F2: Utilisation series uses sum(tool_utilisation)/length per snapshot.
  * F3: Empty/zero-completion result renders without crashing.
  */
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ResultsPanel } from '../ResultsPanel';
 import { mockResults, mockEmptyResults, mockConfig } from '../../test/fixtures';

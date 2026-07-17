@@ -15,7 +15,7 @@ interface ResultsPanelProps {
   config: SimulationRequest;
 }
 
-export function ResultsPanel({ results, config }: ResultsPanelProps) {
+export function ResultsPanel({ results }: ResultsPanelProps) {
   const wipData = results.snapshots.map((s) => ({
     time: s.time,
     WIP: s.wip,

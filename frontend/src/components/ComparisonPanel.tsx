@@ -17,10 +17,10 @@ interface ComparisonPanelProps {
 
 const COLORS = ['#4299e1', '#48bb78', '#ed8936', '#9f7aea', '#f56565', '#38b2ac'];
 
-export function ComparisonPanel({ results, config }: ComparisonPanelProps) {
+export function ComparisonPanel({ results }: ComparisonPanelProps) {
   // Merge all snapshots by time for overlay charts
   const mergeSnapshotsByMetric = (metric: 'wip' | 'cumulative_moves' | 'cumulative_queue_time') => {
-    const timeMap = new Map<number, any>();
+    const timeMap = new Map<number, Record<string, number>>();
     
     results.forEach((result) => {
       result.snapshots.forEach((snapshot) => {

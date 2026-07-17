@@ -57,8 +57,9 @@ function App() {
         const result = await api.runSimulation(singleConfig);
         setResults(result);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.detail || err.message || 'Simulation failed');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { detail?: string } }; message?: string };
+      setError(error.response?.data?.detail || error.message || 'Simulation failed');
     } finally {
       setLoading(false);
     }
