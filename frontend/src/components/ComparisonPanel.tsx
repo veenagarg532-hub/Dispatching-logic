@@ -28,7 +28,9 @@ export function ComparisonPanel({ results }: ComparisonPanelProps) {
           timeMap.set(snapshot.time, { time: snapshot.time });
         }
         const dataPoint = timeMap.get(snapshot.time);
-        dataPoint[`${result.dispatching_rule}`] = snapshot[metric];
+        if (dataPoint) {
+          dataPoint[`${result.dispatching_rule}`] = snapshot[metric];
+        }
       });
     });
     

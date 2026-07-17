@@ -15,11 +15,13 @@ import { mockResults, mockEmptyResults, mockConfig } from '../../test/fixtures';
 // Recharts uses ResizeObserver which is not available in jsdom
 // ---------------------------------------------------------------------------
 beforeAll(() => {
-  global.ResizeObserver = class ResizeObserver {
+  // ResizeObserver is not available in jsdom — provide a no-op stub
+  class ResizeObserverStub {
     observe() {}
     unobserve() {}
     disconnect() {}
-  };
+  }
+  window.ResizeObserver = ResizeObserverStub;
 });
 
 // ---------------------------------------------------------------------------
